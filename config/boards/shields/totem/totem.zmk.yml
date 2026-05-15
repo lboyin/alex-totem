@@ -6,7 +6,6 @@ url: https://github.com/GEIGEIGEIST/TOTEM
 requires: [xiao_ble/nrf52840/zmk]
 features:
   - keys
-  - studio
 siblings:
   - totem_left
   - totem_right
