@@ -61,9 +61,9 @@ Every push produces a `firmware.zip` artifact with these `.uf2` files:
 
 | File | Where to flash |
 |---|---|
-| `totem_left-seeeduino_xiao_ble-zmk.uf2` | Left half (central — talks to host) |
-| `totem_right-seeeduino_xiao_ble-zmk.uf2` | Right half (peripheral) |
-| `totem_left_studio-seeeduino_xiao_ble-zmk.uf2` | Replaces left when you want Studio + keypeek |
+| `totem_left-xiao_ble-zmk.uf2` | Left half (central — talks to host) |
+| `totem_right-xiao_ble-zmk.uf2` | Right half (peripheral) |
+| `totem_left_studio-xiao_ble-zmk.uf2` | Replaces left when you want Studio + keypeek |
 
 ### Flashing
 
