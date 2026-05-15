@@ -1,0 +1,235 @@
+layout:
+  dts_layout: ../config/boards/shields/totem/totem-layouts.dtsi
+  layout_name: totem_layout
+
+layers:
+  Base:
+    - Q
+    - W
+    - E
+    - R
+    - T
+    - Y
+    - U
+    - I
+    - O
+    - P
+    - { t: A, h: Ctrl }
+    - { t: S, h: Alt }
+    - { t: D, h: GUI }
+    - { t: F, h: Shift }
+    - G
+    - H
+    - { t: J, h: Shift }
+    - { t: K, h: GUI }
+    - { t: L, h: Alt }
+    - { t: ';', h: Ctrl }
+    - Z
+    - X
+    - { t: C, h: Meh }
+    - { t: V, h: Hyp }
+    - B
+    - N
+    - { t: M, h: Hyp }
+    - { t: ',', h: Meh }
+    - { t: ':', s: '.' }
+    - "/"
+    - Tab
+    - { t: Esc, h: UTIL }
+    - { t: Space, h: NAV }
+    - { t: Shift, type: held }
+    - Space
+    - { t: BSpc, h: NUM }
+    - { t: Del, h: FUN }
+    - Tab
+
+  NAV:
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - Home
+    - "↑"
+    - End
+    - PgUp
+    - Ctrl
+    - Alt
+    - GUI
+    - Shift
+    - " "
+    - " "
+    - "←"
+    - "↓"
+    - "→"
+    - PgDn
+    - " "
+    - " "
+    - Meh
+    - Hyp
+    - " "
+    - " "
+    - "~"
+    - " "
+    - "/"
+    - " "
+    - Back
+    - " "
+    - " "
+    - " "
+    - Enter
+    - BSpc
+    - Del
+    - Fwd
+
+  NUM:
+    - "+"
+    - "7"
+    - "8"
+    - "9"
+    - "*"
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - "0"
+    - "4"
+    - "5"
+    - "6"
+    - "="
+    - " "
+    - Shift
+    - GUI
+    - Alt
+    - Ctrl
+    - "-"
+    - "1"
+    - "2"
+    - "3"
+    - "/"
+    - " "
+    - Hyp
+    - Meh
+    - " "
+    - " "
+    - "("
+    - " "
+    - "."
+    - ";"
+    - " "
+    - " "
+    - " "
+    - ")"
+
+  FUN:
+    - F12
+    - F7
+    - F8
+    - F9
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - F11
+    - F4
+    - F5
+    - F6
+    - " "
+    - " "
+    - Shift
+    - GUI
+    - Alt
+    - Ctrl
+    - F10
+    - F1
+    - F2
+    - F3
+    - " "
+    - " "
+    - Hyp
+    - Meh
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+
+  UTIL:
+    - BT0
+    - BT1
+    - BT2
+    - BTC
+    - " "
+    - " "
+    - " "
+    - Vol+
+    - " "
+    - " "
+    - Ctrl
+    - Alt
+    - GUI
+    - Shift
+    - " "
+    - " "
+    - " "
+    - Vol-
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - Hyp
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - Mute
+    - " "
+
+combos:
+  - { p: [1, 11],  k: "@",  l: [Base, NAV, NUM] }
+  - { p: [2, 12],  k: "#",  l: [Base, NAV, NUM] }
+  - { p: [3, 13],  k: "$",  l: [Base, NAV, NUM] }
+  - { p: [4, 14],  k: "%",  l: [Base, NAV, NUM] }
+  - { p: [11, 21], k: "`",  l: [Base, NAV, NUM] }
+  - { p: [12, 22], k: "\\", l: [Base, NAV, NUM] }
+  - { p: [13, 23], k: "=",  l: [Base, NAV, NUM] }
+  - { p: [14, 24], k: "~",  l: [Base, NAV, NUM] }
+  - { p: [21, 23], k: "Cut",   l: [Base, NAV, NUM] }
+  - { p: [21, 22], k: "Copy",  l: [Base, NAV, NUM] }
+  - { p: [22, 23], k: "Paste", l: [Base, NAV, NUM] }
+  - { p: [5, 15],  k: "^",  l: [Base, NAV, NUM] }
+  - { p: [6, 16],  k: "+",  l: [Base, NAV, NUM] }
+  - { p: [7, 17],  k: "*",  l: [Base, NAV, NUM] }
+  - { p: [8, 18],  k: "&",  l: [Base, NAV, NUM] }
+  - { p: [15, 25], k: "_",  l: [Base, NAV, NUM] }
+  - { p: [16, 26], k: "-",  l: [Base, NAV, NUM] }
+  - { p: [17, 27], k: "/",  l: [Base, NAV, NUM] }
+  - { p: [18, 28], k: "|",  l: [Base, NAV, NUM] }
+  - { p: [6, 7],   k: "[",  l: [Base, NAV, NUM] }
+  - { p: [7, 8],   k: "]",  l: [Base, NAV, NUM] }
+  - { p: [16, 17], k: "(",  l: [Base, NAV, NUM] }
+  - { p: [17, 18], k: ")",  l: [Base, NAV, NUM] }
+  - { p: [26, 27], k: "{",  l: [Base, NAV, NUM] }
+  - { p: [27, 28], k: "}",  l: [Base, NAV, NUM] }
+  - { p: [15, 16], k: "<",  l: [Base, NAV, NUM] }
+  - { p: [18, 19], k: ">",  l: [Base, NAV, NUM] }
+  - { p: [13, 16], k: CapsW, l: [Base, NAV, NUM] }
+  - { p: [16, 17, 18], k: "Enter", l: [Base, NAV, NUM] }
