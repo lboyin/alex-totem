@@ -1,0 +1,25 @@
+/*
+ * Default shield-bundled keymap stub.
+ *
+ * The active keymap lives in /config/totem.keymap, which ZMK loads in
+ * preference to this file when this directory is used as a user config.
+ * This stub exists so the shield can also build standalone for testing.
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <
+                &kp Q &kp W &kp E &kp R &kp T     &kp Y &kp U &kp I    &kp O   &kp P
+                &kp A &kp S &kp D &kp F &kp G     &kp H &kp J &kp K    &kp L   &kp SEMI
+       &kp TAB &kp Z &kp X &kp C &kp V &kp B     &kp N &kp M &kp COMMA &kp DOT &kp FSLH &kp TAB
+                           &kp ESC &kp SPACE &kp LSHFT     &kp RET &kp BSPC &kp DEL
+            >;
+        };
+    };
+};

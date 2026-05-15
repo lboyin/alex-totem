@@ -1,0 +1,39 @@
+# west manifest — declares the modules pulled in at build time.
+#
+# Notes:
+# - We use upstream zmkfirmware/zmk@main so ZMK Studio works (Studio is mainline).
+# - urob/zmk-helpers provides the nodefree macros (ZMK_BEHAVIOR, ZMK_LAYER,
+#   ZMK_COMBO) and the Totem key-label header used by config/totem.keymap.
+# - zzeneg/zmk-raw-hid + srwi/zmk-keypeek-layer-notifier expose layer-change
+#   events over USB so srwi/keypeek can render the active layer on the host.
+#   Both are only required when building the studio-enabled firmware that
+#   pulls in the `raw_hid_adapter` shield (see build.yaml).
+#
+# Pin revisions to specific commits if you want reproducible builds.
+
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+    - name: urob
+      url-base: https://github.com/urob
+    - name: zzeneg
+      url-base: https://github.com/zzeneg
+    - name: srwi
+      url-base: https://github.com/srwi
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: main
+      import: app/west.yml
+    - name: zmk-helpers
+      remote: urob
+      revision: main
+    - name: zmk-raw-hid
+      remote: zzeneg
+      revision: main
+    - name: zmk-keypeek-layer-notifier
+      remote: srwi
+      revision: master
+  self:
+    path: config

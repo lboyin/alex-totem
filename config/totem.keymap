@@ -1,0 +1,170 @@
+/*
+ * TOTEM keymap — QWERTY base, modular bsag/urob-style structure.
+ *
+ *  - Home-row mods on both hands (Ctrl/Alt/GUI/Shift, balanced flavor with
+ *    require-prior-idle-ms so they don't trigger while you're typing fast).
+ *  - 5 layers: BASE, NAV, NUM, FUN, UTIL — thumb layer-taps switch them.
+ *  - Combos for shift-symbols, brackets/parens/braces, cut/copy/paste,
+ *    and caps-word (see combos.dtsi).
+ *  - mod-morphs: `,`->`;`, `.`->`:`, `/`->`?`(via natural shift).
+ *
+ * Layout reference (urob/zmk-helpers totem.h key labels):
+ *
+ *      LT4 LT3 LT2 LT1 LT0     RT0 RT1 RT2 RT3 RT4
+ *      LM4 LM3 LM2 LM1 LM0     RM0 RM1 RM2 RM3 RM4
+ *  LB5 LB4 LB3 LB2 LB1 LB0     RB0 RB1 RB2 RB3 RB4 RB5
+ *          LH2 LH1 LH0         RH0 RH1 RH2
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+
+#include <zmk-helpers/helper.h>
+#include <zmk-helpers/key-labels/totem.h>
+
+/* ------------------------------- aliases ------------------------------- */
+
+#define XXX &none
+#define ___ &trans
+
+// Layer indices
+#define BASE 0
+#define NAV  1
+#define NUM  2
+#define FUN  3
+#define UTIL 4
+
+// Navigation: back/forward / prev-tab/next-tab (macOS bindings, swap LG to LC on Linux/Win)
+#define BACK &kp LG(LBKT)
+#define FWD  &kp LG(RBKT)
+
+// Hyper and Meh — useful with apps like Karabiner / AutoHotkey
+#define HYP LS(LC(LA(LGUI)))
+#define MEH LS(LC(LALT))
+
+/* ----------------------------- tuning knobs ---------------------------- */
+
+#define QUICK_TAP_MS 175
+
+&caps_word {
+    /delete-property/ ignore-numbers;
+    continue-list = <BACKSPACE ENTER DELETE UNDERSCORE MINUS>;
+};
+
+&key_repeat {
+    usage-pages = <HID_USAGE_KEY HID_USAGE_CONSUMER>;
+};
+
+&sk {
+    release-after-ms = <2000>;
+    quick-release;
+};
+
+&lt {
+    flavor = "balanced";
+    tapping-term-ms = <200>;
+    quick-tap-ms = <QUICK_TAP_MS>;
+};
+
+/* ---------------------------- home-row mods ---------------------------- */
+
+// Override the helper-module sets to exclude outer pinkies from HRM trigger lists.
+#undef KEYS_L
+#undef KEYS_R
+#undef THUMBS
+#define KEYS_L LT0 LT1 LT2 LT3 LT4 LM0 LM1 LM2 LM3 LM4 LB0 LB1 LB2 LB3 LB4
+#define KEYS_R RT0 RT1 RT2 RT3 RT4 RM0 RM1 RM2 RM3 RM4 RB0 RB1 RB2 RB3 RB4
+#define THUMBS LH2 LH1 LH0 RH0 RH1 RH2
+
+#define MAKE_HRM(NAME, HOLD, TAP, TRIGGER_POS) \
+    ZMK_BEHAVIOR(NAME, hold_tap, \
+        flavor = "balanced"; \
+        tapping-term-ms = <280>; \
+        quick-tap-ms = <QUICK_TAP_MS>; \
+        require-prior-idle-ms = <150>; \
+        bindings = <HOLD>, <TAP>; \
+        hold-trigger-key-positions = <TRIGGER_POS>; \
+        hold-trigger-on-release; \
+    )
+MAKE_HRM(hml, &kp, &kp, KEYS_R THUMBS)   // left-hand HRMs
+MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS)   // right-hand HRMs
+
+// Right-pinky-adjacent HRM whose tap is the `,`/`;` mod-morph.
+MAKE_HRM(hmr_meh, &kp, &comma_morph, KEYS_L THUMBS)
+
+/* ---------------------------- mod-morphs ----------------------------- */
+
+// `,`  on tap, `;` on shift+tap
+ZMK_BEHAVIOR(comma_morph, mod_morph,
+    bindings = <&kp COMMA>, <&kp SEMICOLON>;
+    mods = <(MOD_LSFT|MOD_RSFT)>;
+)
+
+// `.`  on tap, `:` on shift+tap
+ZMK_BEHAVIOR(dot_morph, mod_morph,
+    bindings = <&kp DOT>, <&kp COLON>;
+    mods = <(MOD_LSFT|MOD_RSFT)>;
+)
+
+/* -------------------------------- combos ------------------------------- */
+
+#include "combos.dtsi"
+
+/* ------------------------------- layers -------------------------------- */
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer { // QWERTY
+            display-name = "QWERTY";
+            bindings = <
+        &kp Q         &kp W       &kp E         &kp R          &kp T           &kp Y      &kp U          &kp I         &kp O       &kp P
+        &hml LCTRL A  &hml LALT S &hml LGUI D   &hml LSHFT F   &kp G           &kp H      &hmr RSHFT J   &hmr RGUI K   &hmr LALT L &hmr RCTRL SEMI
+&kp TAB &kp Z         &kp X       &hml MEH C    &hml HYP V     &kp B           &kp N      &hmr HYP M     &hmr_meh MEH 0 &dot_morph &kp FSLH        &kp TAB
+                                  &lt UTIL ESC  &lt NAV SPACE  &sk LSHFT       &kp RET    &lt NUM BSPC   &lt FUN DEL
+            >;
+        };
+
+        nav_layer { // arrows + history navigation
+            display-name = "NAV";
+            bindings = <
+        ___          ___         ___          ___           ___                ___        &kp HOME      &kp UP        &kp END     &kp PAGE_UP
+        &kp LCTRL    &kp LALT    &kp LGUI     &kp LSHFT     ___                ___        &kp LEFT      &kp DOWN      &kp RIGHT   &kp PAGE_DOWN
+BACK    ___          ___         &kp MEH      &kp HYP       ___                ___        &kp TILDE     ___           &kp FSLH    ___             FWD
+                                 ___          ___           ___                &kp RET    &kp BSPC      &kp DEL
+            >;
+        };
+
+        num_layer { // numpad on the left
+            display-name = "NUM";
+            bindings = <
+        &kp PLUS     &kp N7      &kp N8       &kp N9        &kp STAR           ___        ___           ___           ___         ___
+        &kp N0       &kp N4      &kp N5       &kp N6        &kp EQUAL          ___        &kp LSHFT     &kp LGUI      &kp LALT    &kp LCTRL
+&kp LPAR &kp MINUS   &kp N1      &kp N2       &kp N3        &kp FSLH           ___        &kp HYP       &kp MEH       ___         ___             &kp RPAR
+                                 ___          &kp DOT       &kp SEMI           ___        ___           ___
+            >;
+        };
+
+        fun_layer { // F-keys mirror the numpad shape
+            display-name = "FUN";
+            bindings = <
+        &kp F12      &kp F7      &kp F8       &kp F9        ___                ___        ___           ___           ___         ___
+        &kp F11      &kp F4      &kp F5       &kp F6        ___                ___        &kp LSHFT     &kp LGUI      &kp LALT    &kp LCTRL
+___     &kp F10      &kp F1      &kp F2       &kp F3        ___                ___        &kp HYP       &kp MEH       ___         ___             ___
+                                 ___          ___           ___                ___        ___           ___
+            >;
+        };
+
+        util_layer { // BT pairing + media
+            display-name = "UTIL";
+            bindings = <
+        &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_CLR    ___                ___        ___           &kp C_VOL_UP  ___         ___
+        &kp LCTRL    &kp LALT    &kp LGUI     &kp LSHFT     ___                ___        ___           &kp C_VOL_DN  ___         ___
+___     ___          ___         ___          &kp HYP       ___                ___        ___           ___           ___         ___             ___
+                                 ___          ___           ___                ___        ___           &kp C_MUTE
+            >;
+        };
+    };
+};

@@ -1,0 +1,19 @@
+# Build artifacts
+build/
+.west/
+zephyr/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python / west
+__pycache__/
+*.pyc
+
+# Local
+*.log

@@ -1,0 +1,24 @@
+# GitHub Actions build matrix.
+#
+# Targets:
+#   - totem_left              : the central half (paired to host over USB/BT)
+#   - totem_right             : the peripheral half (talks to the left half)
+#   - totem_left + studio     : a Studio-enabled central build, also wired up
+#                               for the srwi/keypeek layer overlay via raw HID.
+#
+# Flash the matching uf2 to each half. The studio build replaces the
+# regular totem_left firmware on the central side when you want live
+# editing in ZMK Studio or layer mirroring in keypeek.
+
+include:
+  - board: seeeduino_xiao_ble
+    shield: totem_left
+
+  - board: seeeduino_xiao_ble
+    shield: totem_right
+
+  - board: seeeduino_xiao_ble
+    shield: totem_left raw_hid_adapter
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n
+    artifact-name: totem_left_studio
