@@ -5,17 +5,10 @@ Custom ZMK firmware for the [TOTEM][totem] 38-key split keyboard.
 Keymap structure is borrowed from [bsag/zmk-config-bsag][bsag] (modular,
 nodefree-style includes, home-row mods, mod-morphs, lots of combos) but
 the base layer is **QWERTY** instead of Colemak-DH. The shield definition
-<<<<<<< Updated upstream
-is forked from [cvaldezcomputerer/zmk-config][cvaldez] and adds a
-physical-layout DTSI so [ZMK Studio][studio] can render the board.
-The build matrix also produces a Studio-enabled firmware wired up to
-the [srwi/keypeek][keypeek] live overlay via raw HID.
-=======
 is based on [cvaldezcomputerer/zmk-config][cvaldez] / [GEIGEIGEIST/TOTEM][totem]
 and uses cvaldez's row-major position numbering (a hard requirement for
 [ZMK Studio][studio]). A Studio-enabled build with raw HID wired up to
 the [srwi/keypeek][keypeek] live overlay is in the build matrix.
->>>>>>> Stashed changes
 
 [totem]: https://github.com/GEIGEIGEIST/TOTEM
 [bsag]: https://github.com/bsag/zmk-config-bsag
@@ -70,12 +63,8 @@ Every push produces a `firmware.zip` artifact with these `.uf2` files:
 |---|---|
 | `totem_left-xiao_ble-zmk.uf2` | Left half (central — talks to host) |
 | `totem_right-xiao_ble-zmk.uf2` | Right half (peripheral) |
-<<<<<<< Updated upstream
-| `totem_left_studio-xiao_ble-zmk.uf2` | Replaces left when you want Studio + keypeek |
-=======
 | `totem_left_studio-xiao_ble-zmk.uf2` | Replaces left when you want ZMK Studio + keypeek |
 | `settings_reset-xiao_ble-zmk.uf2` | Flash to wipe stored settings (BT pairings, etc) |
->>>>>>> Stashed changes
 
 ### Flashing
 
@@ -87,35 +76,6 @@ After flashing both halves the first time, hold the rightmost outer key
 on each side at power-on (or run the BT clear combo) to clear stale
 pairing info if the halves don't find each other.
 
-<<<<<<< Updated upstream
-## ZMK Studio
-
-[Studio][studio] lets you edit the keymap live without re-flashing.
-
-1. Flash `totem_left_studio-...-zmk.uf2` to the left half.
-2. Plug the left half into USB.
-3. Open ZMK Studio (web or desktop).
-4. Click *Connect*. The Totem appears with the physical layout drawn
-   from `totem-layouts.dtsi`.
-5. Edit, then *Save* to commit changes to the keyboard.
-
-Locking is disabled (`-DCONFIG_ZMK_STUDIO_LOCKING=n` in `build.yaml`)
-so you don't need an unlock key on the keymap. Flip it back on later
-by removing that flag if you want the safety.
-
-## keypeek (on-screen layer overlay)
-
-[keypeek][keypeek] is a host-side Rust app that draws your current
-layer over your other windows. It reads layout + keymap directly from
-the keyboard over Studio's RPC channel, so:
-
-1. Flash the **studio** firmware (same uf2 as above — it also bundles
-   `raw_hid_adapter` and the `zmk-keypeek-layer-notifier` module).
-2. Download keypeek from <https://github.com/srwi/keypeek/releases>.
-3. Plug the left half into USB, launch keypeek, pick the TOTEM from
-   the device list.
-4. The overlay redraws when you press a layer key.
-=======
 ## ZMK Studio + keypeek
 
 [Studio][studio] lets you edit the keymap live without re-flashing.
@@ -130,7 +90,6 @@ Both use the same firmware build (`totem_left_studio`).
    *Connect*. The Totem appears with its physical layout. Edit, *Save*.
 4. For keypeek: download from <https://github.com/srwi/keypeek/releases>,
    launch, pick the TOTEM from the device list.
->>>>>>> Stashed changes
 
 Locking is disabled (`-DCONFIG_ZMK_STUDIO_LOCKING=n` in `build.yaml`)
 so you don't need an unlock key on the keymap.
