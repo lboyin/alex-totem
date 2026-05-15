@@ -1,18 +1,16 @@
 /*
- * Physical layout for the 38-key TOTEM shield.
+ * Physical layout for the 38-key TOTEM shield (row-major order).
  *
- * Entry order matches the matrix transform `map` in totem.dtsi exactly:
- *   0..9   top row (5 + 5)
- *   10..19 home row (5 + 5)
- *   20     left outer pinky    (LB5)
- *   21..30 bottom row inner    (LB4..LB0, RB0..RB4)
- *   31     right outer pinky   (RB5)
- *   32..34 left thumbs         (LH2, LH1, LH0)
- *   35..37 right thumbs        (RH0, RH1, RH2)
+ * Key index order MUST match the matrix transform `map` in totem.dtsi:
+ *   0..9   top row    (5 + 5)
+ *   10..19 home row   (5 + 5)
+ *   20..29 inner bottom row (5 + 5)
+ *   30     left outer pinky
+ *   31..33 left thumbs
+ *   34..36 right thumbs
+ *   37     right outer pinky
  *
- * This ordering is what urob/zmk-helpers' totem.h key labels assume.
- * Coordinate values borrowed from cvaldezcomputerer/zmk-config, reordered
- * to match the matrix transform above.
+ * Coordinate values borrowed from cvaldezcomputerer/zmk-config.
  */
 
 #include <physical_layouts.dtsi>
@@ -45,9 +43,7 @@
             , <&key_physical_attrs 100 100 1062   90       0     0     0>
             , <&key_physical_attrs 100 100 1165  143     400  1215   193>
             , <&key_physical_attrs 100 100 1261  224    1000  1311   274>
-            // Left outer pinky (20)
-            , <&key_physical_attrs 100 100    0  289 (-1000)    50   339>
-            // Bottom row inner (21..30)
+            // Inner bottom row (20..29)
             , <&key_physical_attrs 100 100  101  312 (-1000)   151   362>
             , <&key_physical_attrs 100 100  188  233  (-400)   238   283>
             , <&key_physical_attrs 100 100  284  179       0     0     0>
@@ -58,16 +54,18 @@
             , <&key_physical_attrs 100 100 1062  179       0     0     0>
             , <&key_physical_attrs 100 100 1158  233     400  1208   283>
             , <&key_physical_attrs 100 100 1246  312    1000  1296   362>
-            // Right outer pinky (31)
-            , <&key_physical_attrs 100 100 1346  289    1000  1396   339>
-            // Left thumbs (32..34)
+            // Left outer pinky (30)
+            , <&key_physical_attrs 100 100    0  289 (-1000)    50   339>
+            // Left thumbs (31..33)
             , <&key_physical_attrs 100 100  352  332       0     0     0>
             , <&key_physical_attrs 100 100  457  347    1500   507   397>
             , <&key_physical_attrs 100 100  554  387    3000   604   437>
-            // Right thumbs (35..37)
+            // Right thumbs (34..36)
             , <&key_physical_attrs 100 100  792  387 (-3000)   842   437>
             , <&key_physical_attrs 100 100  889  347 (-1500)   939   397>
             , <&key_physical_attrs 100 100  994  332       0     0     0>
+            // Right outer pinky (37)
+            , <&key_physical_attrs 100 100 1346  289    1000  1396   339>
             ;
     };
 };

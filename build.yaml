@@ -1,6 +1,7 @@
 # GitHub Actions build matrix.
 #
 # Targets:
+<<<<<<< Updated upstream
 #   - totem_left              : the central half (paired to host over USB/BT)
 #   - totem_right             : the peripheral half (talks to the left half)
 #   - totem_left + studio     : a Studio-enabled central build, also wired up
@@ -9,6 +10,15 @@
 # Flash the matching uf2 to each half. The studio build replaces the
 # regular totem_left firmware on the central side when you want live
 # editing in ZMK Studio or layer mirroring in keypeek.
+=======
+#   - totem_left          : the central half (paired to host over USB/BT)
+#   - totem_right         : the peripheral half (talks to the left half)
+#   - totem_left_studio   : Studio-enabled central with raw HID + keypeek
+#                           support. Replaces totem_left when you want live
+#                           keymap edits in ZMK Studio and/or the keypeek
+#                           on-screen overlay.
+#   - settings_reset      : flash to wipe stored settings on either half.
+>>>>>>> Stashed changes
 
 include:
   - board: xiao_ble/nrf52840/zmk
@@ -22,3 +32,10 @@ include:
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n
     artifact-name: totem_left_studio
+<<<<<<< Updated upstream
+=======
+
+  - board: xiao_ble/nrf52840/zmk
+    shield: settings_reset
+    artifact-name: settings_reset
+>>>>>>> Stashed changes
