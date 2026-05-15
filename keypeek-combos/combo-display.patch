@@ -1,0 +1,238 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index c9599f6..9fc086f 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -18,6 +18,7 @@ qmk-via-api = { version = "0.7.0" }
+ hidapi = "2.6.5"
+ serde = { version = "1", features = ["derive"] }
+ serde_json = "1.0.149"
++serde_yaml = "0.9"
+ egui-phosphor = "0.12.0"
+ egui-file-dialog = "0.13.0"
+ image = "0.25.10"
+diff --git a/src/combos.rs b/src/combos.rs
+new file mode 100644
+index 0000000..81d7642
+--- /dev/null
++++ b/src/combos.rs
+@@ -0,0 +1,76 @@
++//! Combo overlay support: reads a `combos.yaml` file next to the executable
++//! (or the current working directory) and exposes the list of combos to be
++//! rendered as arcs/labels on top of the keyboard layout.
++//!
++//! YAML format (positions are indices into the physical-layout key list,
++//! matching what `keymap-drawer` uses):
++//!
++//! ```yaml
++//! combos:
++//!   - positions: [1, 11]
++//!     label: "@"
++//!   - positions: [16, 17, 18]
++//!     label: "Enter"
++//! ```
++
++use serde::Deserialize;
++use std::path::PathBuf;
++
++#[derive(Deserialize, Debug, Clone)]
++pub struct Combo {
++    pub positions: Vec<usize>,
++    pub label: String,
++    /// Optional list of layer indices the combo is active on. Empty = always.
++    #[serde(default)]
++    pub layers: Vec<usize>,
++}
++
++#[derive(Deserialize, Debug, Default)]
++struct CombosFile {
++    #[serde(default)]
++    combos: Vec<Combo>,
++}
++
++fn find_combos_file() -> Option<PathBuf> {
++    // 1. Next to the executable
++    if let Ok(exe) = std::env::current_exe() {
++        if let Some(dir) = exe.parent() {
++            let p = dir.join("combos.yaml");
++            if p.exists() {
++                return Some(p);
++            }
++        }
++    }
++    // 2. Current working directory
++    let cwd = PathBuf::from("combos.yaml");
++    if cwd.exists() {
++        return Some(cwd);
++    }
++    None
++}
++
++pub fn load_combos() -> Vec<Combo> {
++    let Some(path) = find_combos_file() else {
++        return Vec::new();
++    };
++    let text = match std::fs::read_to_string(&path) {
++        Ok(t) => t,
++        Err(e) => {
++            eprintln!("keypeek: failed to read {}: {}", path.display(), e);
++            return Vec::new();
++        }
++    };
++    let parsed: CombosFile = match serde_yaml::from_str(&text) {
++        Ok(p) => p,
++        Err(e) => {
++            eprintln!("keypeek: failed to parse {}: {}", path.display(), e);
++            return Vec::new();
++        }
++    };
++    eprintln!(
++        "keypeek: loaded {} combos from {}",
++        parsed.combos.len(),
++        path.display()
++    );
++    parsed.combos
++}
+diff --git a/src/keyboard.rs b/src/keyboard.rs
+index 932633c..0170035 100644
+--- a/src/keyboard.rs
++++ b/src/keyboard.rs
+@@ -147,6 +147,20 @@ impl Keyboard {
+         self.matrix.lock().unwrap().is_pressed(row, col)
+     }
+ 
++
++    /// Index of the highest-numbered active layer (momentary OR default-layer
++    /// promoted via toggle). Falls back to 0 if no non-base layer is active.
++    pub fn active_layer_index(&self) -> Option<usize> {
++        let layer_state = *self.layer_state.lock().unwrap();
++        let default_layer_state = *self.default_layer_state.lock().unwrap();
++        let combined = layer_state | default_layer_state;
++        if combined == 0 {
++            return Some(0);
++        }
++        // highest bit set
++        Some(31 - combined.leading_zeros() as usize)
++    }
++
+     pub fn set_timeout(&self, timeout: i64) {
+         *self.timeout_ms.lock().unwrap() = timeout;
+     }
+diff --git a/src/main.rs b/src/main.rs
+index 0ba82a5..867af55 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -7,6 +7,7 @@ mod layout_key;
+ mod overlay_window;
+ mod protocols;
+ mod qmk_keycode_labels;
++mod combos;
+ mod settings;
+ mod tray;
+ mod ui_wake;
+@@ -20,6 +21,7 @@ use ui_wake::UiWake;
+ 
+ fn main() -> Result<(), eframe::Error> {
+     let settings = Settings::load().unwrap_or_default();
++    let combos = combos::load_combos();
+     let available_devices = discover_devices();
+ 
+     let options = eframe::NativeOptions {
+@@ -56,6 +58,7 @@ fn main() -> Result<(), eframe::Error> {
+                 UiWake::from_ctx(&cc.egui_ctx),
+                 settings,
+                 available_devices,
++                combos.clone(),
+             )))
+         }),
+     )
+diff --git a/src/overlay_window.rs b/src/overlay_window.rs
+index 31e1b1e..4321069 100644
+--- a/src/overlay_window.rs
++++ b/src/overlay_window.rs
+@@ -21,6 +21,7 @@ pub struct OverlayApp {
+     settings: SettingsState,
+     session: SessionState,
+     connect: ConnectDraftState,
++    pub combos: Vec<crate::combos::Combo>,
+ }
+ 
+ impl OverlayApp {
+@@ -29,6 +30,7 @@ impl OverlayApp {
+         ui_wake: UiWake,
+         base_settings: Settings,
+         available_devices: Vec<DiscoveredDevice>,
++        combos: Vec<crate::combos::Combo>,
+     ) -> Self {
+         Self {
+             _tray_icon: tray_icon,
+@@ -62,6 +64,7 @@ impl OverlayApp {
+                 },
+                 pending_connect: None,
+             },
++            combos,
+         }
+     }
+ 
+diff --git a/src/overlay_window/ui_overlay.rs b/src/overlay_window/ui_overlay.rs
+index 44cfaa3..2f5848c 100644
+--- a/src/overlay_window/ui_overlay.rs
++++ b/src/overlay_window/ui_overlay.rs
+@@ -275,6 +275,58 @@ impl OverlayApp {
+                         _ => {}
+                     }
+                 }
++
++                // ---- combo overlay ----
++                let combo_bg = egui::Color32::from_rgba_premultiplied(40, 40, 40, 220);
++                let combo_font = egui::FontId::proportional(0.20 * size * font_scale);
++                let current_layer = match keyboard.active_layer_index() {
++                    Some(i) => i,
++                    None => 0,
++                };
++                for combo in &self.combos {
++                    if combo.positions.len() < 2 {
++                        continue;
++                    }
++                    if !combo.layers.is_empty() && !combo.layers.contains(&current_layer) {
++                        continue;
++                    }
++                    let key_centers: Vec<egui::Pos2> = combo
++                        .positions
++                        .iter()
++                        .filter_map(|&i| keyboard.layout.keys.get(i))
++                        .map(|k| egui::pos2(
++                            (k.x + k.w * 0.5) * size,
++                            (k.y + k.h * 0.5) * size,
++                        ) + window_pos.to_vec2())
++                        .collect();
++                    if key_centers.len() < 2 {
++                        continue;
++                    }
++                    let mut cx = 0.0_f32;
++                    let mut cy = 0.0_f32;
++                    for p in &key_centers {
++                        cx += p.x;
++                        cy += p.y;
++                    }
++                    cx /= key_centers.len() as f32;
++                    cy /= key_centers.len() as f32;
++                    let center = egui::pos2(cx, cy);
++                    let label_galley = ui.painter().layout_no_wrap(
++                        combo.label.clone(),
++                        combo_font.clone(),
++                        egui::Color32::WHITE,
++                    );
++                    let bg_rect = egui::Rect::from_center_size(
++                        center,
++                        egui::vec2(
++                            label_galley.rect.width() + 8.0,
++                            label_galley.rect.height() + 4.0,
++                        ),
++                    );
++                    ui.painter().rect_filled(bg_rect, 4.0, combo_bg);
++                    let label_pos = center - label_galley.rect.center().to_vec2();
++                    ui.painter().galley(label_pos, label_galley, egui::Color32::WHITE);
++                }
+             });
+     }
+ }
