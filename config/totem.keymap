@@ -182,7 +182,7 @@ ___    ___  ___  ___    ___  ___  ___    ___
             bindings = <
 &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_CLR  ___      ___  ___  &kp C_VOL_UP  ___  ___
 &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  ___                  ___  ___  &kp C_VOL_DN  ___  ___
-___  ___  ___  &kp HYP  ___                                   ___  ___  ___  ___  ___
+___  ___  ___  &kp CAPS  ___                                  ___  ___  ___  ___  ___
 ___    ___  ___  ___    ___  ___  &kp C_MUTE    ___
             >;
         };
