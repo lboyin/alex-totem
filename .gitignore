@@ -17,3 +17,7 @@ __pycache__/
 
 # Local
 *.log
+
+# keypeek fork lives here as a nested clone — has its own git origin
+keypeek/
+keypeek.old.*/

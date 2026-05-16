@@ -1,0 +1,45 @@
+# combos.yaml — drop next to the keypeek executable to render combo arcs.
+# Positions are matrix-transform indices (same as in docs/keymap.yaml).
+# `layers` is optional; empty/omitted = always visible.
+
+combos:
+  # Vertical (top + home row, shift symbols)
+  - { positions: [1, 11],  label: "@" }
+  - { positions: [2, 12],  label: "#" }
+  - { positions: [3, 13],  label: "$" }
+  - { positions: [4, 14],  label: "%" }
+  - { positions: [5, 15],  label: "^" }
+  - { positions: [6, 16],  label: "+" }
+  - { positions: [7, 17],  label: "*" }
+  - { positions: [8, 18],  label: "&" }
+
+  # Vertical (home + bottom row)
+  - { positions: [11, 21], label: "`" }
+  - { positions: [12, 22], label: "\\" }
+  - { positions: [13, 23], label: "=" }
+  - { positions: [14, 24], label: "~" }
+  - { positions: [15, 25], label: "_" }
+  - { positions: [16, 26], label: "-" }
+  - { positions: [17, 27], label: "/" }
+  - { positions: [18, 28], label: "|" }
+
+  # Horizontal — cut/copy/paste on X/C/V positions (LB3-LB2-LB1)
+  - { positions: [21, 23], label: "Cut" }
+  - { positions: [21, 22], label: "Copy" }
+  - { positions: [22, 23], label: "Paste" }
+
+  # Brackets / parens / braces on the right hand
+  - { positions: [6, 7],   label: "[" }
+  - { positions: [7, 8],   label: "]" }
+  - { positions: [16, 17], label: "(" }
+  - { positions: [17, 18], label: ")" }
+  - { positions: [26, 27], label: "{" }
+  - { positions: [27, 28], label: "}" }
+  - { positions: [15, 16], label: "<" }
+  - { positions: [18, 19], label: ">" }
+
+  # Caps Word on F+J (index fingers home row)
+  - { positions: [13, 16], label: "CapsW" }
+
+  # Enter on J+K+L (3-key chord)
+  - { positions: [16, 17, 18], label: "Enter" }

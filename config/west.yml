@@ -1,7 +1,10 @@
 # west manifest — declares the modules pulled in at build time.
 #
 # Notes:
-# - We use upstream zmkfirmware/zmk@main (Studio is mainline there).
+# - We pin ZMK to v0.3 (the last release before the Dec 2025 Zephyr 4.1
+#   migration). The 4.1 migration broke deep-sleep wake on the central
+#   half — see zmkfirmware/zmk#3207 and #3195. Until those are fixed
+#   upstream, v0.3 is the recommended stable.
 # - urob/zmk-helpers provides the nodefree macros (ZMK_BEHAVIOR, ZMK_LAYER,
 #   ZMK_COMBO) used in config/totem.keymap. We do NOT use its totem.h key
 #   labels — those assume the bsag-style interleaved matrix; we define our
@@ -10,8 +13,6 @@
 #   and layer events over USB Raw HID so srwi/keypeek can render the active
 #   layer on the host. Only used when building the studio firmware that
 #   pulls in the `raw_hid_adapter` shield (see build.yaml).
-#
-# Pin revisions to specific commits if you want reproducible builds.
 
 manifest:
   remotes:
@@ -26,11 +27,11 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.3
       import: app/west.yml
     - name: zmk-helpers
       remote: urob
-      revision: main
+      revision: v0.3.0
     - name: zmk-raw-hid
       remote: zzeneg
       revision: main
