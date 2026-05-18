@@ -131,6 +131,16 @@ ZMK_BEHAVIOR(dot_morph, mod_morph,
     mods = <(MOD_LSFT|MOD_RSFT)>;
 )
 
+// Long-hold the P key to send PrintScreen; quick tap still types P.
+// tap-preferred + 250ms term means accidental holds while typing
+// stay as P; only deliberate holds send PrintScreen.
+ZMK_BEHAVIOR(p_pscr, hold_tap,
+    flavor = "tap-preferred";
+    tapping-term-ms = <250>;
+    quick-tap-ms = <QUICK_TAP_MS>;
+    bindings = <&kp>, <&kp>;
+)
+
 #include "combos.dtsi"
 
 / {
@@ -140,10 +150,10 @@ ZMK_BEHAVIOR(dot_morph, mod_morph,
         default_layer {
             display-name = "QWERTY";
             bindings = <
-&kp Q  &kp W  &kp E  &kp R  &kp T              &kp Y  &kp U  &kp I  &kp O  &kp P
+&kp Q  &kp W  &kp E  &kp R  &kp T              &kp Y  &kp U  &kp I  &kp O  &p_pscr PRINTSCREEN P
 &hml LCTRL A  &hml LALT S  &hml LGUI D  &hml LSHFT F  &kp G    &kp H  &hmr RSHFT J  &hmr RGUI K  &hmr LALT L  &hmr RCTRL SEMI
 &kp Z  &kp X  &hml MEH C  &hml HYP V  &kp B            &kp N  &hmr HYP M  &hmr_meh MEH 0  &dot_morph  &kp FSLH
-&kp TAB    &lt UTIL ESC  &lt NAV SPACE  &sk LSHFT    &kp SPACE  &lt NUM BSPC  &lt FUN DEL    &kp TAB
+&kp TAB    &lt UTIL ESC  &lt NAV SPACE  &sk LSHFT    &kp SPACE  &lt NUM BSPC  &lt FUN DEL    &kp APOS
             >;
         };
 
@@ -180,7 +190,7 @@ ___    ___  ___  ___    ___  ___  ___    ___
         util_layer {
             display-name = "UTIL";
             bindings = <
-&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_CLR  ___      ___  ___  &kp C_VOL_UP  ___  ___
+&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_CLR  ___      &kp LG(LS(N4))  &kp INS  &kp C_VOL_UP  ___  ___
 &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  ___                  ___  ___  &kp C_VOL_DN  ___  ___
 ___  ___  ___  &kp CAPS  ___                                  ___  ___  ___  ___  ___
 ___    ___  ___  ___    ___  ___  &kp C_MUTE    ___

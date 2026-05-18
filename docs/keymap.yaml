@@ -13,7 +13,7 @@ layers:
     - U
     - I
     - O
-    - P
+    - { t: P, h: PrtSc }
     - { t: A, h: Ctrl }
     - { t: S, h: Alt }
     - { t: D, h: GUI }
@@ -41,7 +41,7 @@ layers:
     - Space
     - { t: BSpc, h: NUM }
     - { t: Del, h: FUN }
-    - Tab
+    - "'"
 
   NAV:
     - " "
@@ -169,8 +169,8 @@ layers:
     - BT2
     - BTC
     - " "
-    - " "
-    - " "
+    - Snip
+    - Ins
     - Vol+
     - " "
     - " "
