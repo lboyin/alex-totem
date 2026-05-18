@@ -2,6 +2,19 @@ layout:
   dts_layout: ../config/boards/shields/totem/totem-layouts.dtsi
   layout_name: totem_layout
 
+# Make hold labels much more visible — bigger font, bold, red.
+# Default keymap-drawer renders them at 11px which is too small to read at a glance.
+draw_config:
+  svg_extra_style: |
+    text.hold {
+      font-size: 14px;
+      font-weight: bold;
+      fill: #c0392b;
+    }
+    text.tap {
+      font-weight: bold;
+    }
+
 layers:
   Base:
     - Q
