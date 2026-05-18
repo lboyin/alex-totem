@@ -43,3 +43,11 @@ combos:
 
   # Enter on J+K+L (3-key chord)
   - { positions: [16, 17, 18], label: "Enter" }
+
+# Manual per-position overrides for keys keypeek can't auto-decode.
+# Positions are matrix-transform indices (same as combo positions).
+key_overrides:
+  # comma key — &hmr_meh MEH 0: tap=&comma_morph (',' or ';' on shift), hold=Meh
+  - { position: 27, tap: ",",  hold: "Meh" }
+  # period/colon key — &dot_morph: tap=. shift=:
+  - { position: 28, tap: ".",  hold: "" }
