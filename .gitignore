@@ -21,3 +21,8 @@ __pycache__/
 # keypeek fork lives here as a nested clone — has its own git origin
 keypeek/
 keypeek.old.*/
+
+# Compiled binaries — too big for git, downloaded from GitHub Actions
+keypeek-combos/*.exe
+keypeek-combos/*.AppImage
+keypeek-combos/*.dmg
